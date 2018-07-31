@@ -1,6 +1,16 @@
 # OKDALM
 fork from https://github.com/luckybilly/OKDALM
-
+- 增加 -l 对输出 mavenLocal 的支持
+- 增加配置 module 的发布类型
+  - 可单独配置 module 的 MavenType、ArtifactId、GroupId
+  - eg. LibAMavenType = release
+- 修复更新 module 信息时出现正则误匹配
+  - eg. AModule 、AAModule，当修改 AModule 时，AAModule 误修改
+- 遍历 Module 依赖时，过滤 lint-gradle 依赖  
+- 调整原有的更新机制 
+  - 配置 -u 时改为强制升级，无论当前是 snapshot 还是 release
+  - 配置 -r 时改为强制设置 release，并重写 version_properties.gradle 中的配置，优先于 -u
+- 去除原有的 publications 里 android 逻辑判断
 
 ## Android studio基于artifactory的maven私服一键deploy工具
 
