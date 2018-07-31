@@ -1,6 +1,6 @@
 # OKDALM2
 
-![](https://img.shields.io/badge/lastest_version-1.1-orange.svg)
+[![](https://img.shields.io/badge/lastest_version-1.1-orange.svg)](CHANGELOG)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![ForkfromOKDALM](https://img.shields.io/badge/base-OKDALM-green.svg)](https://github.com/luckybilly/OKDALM)
 
