@@ -2,10 +2,10 @@
 ![](https://img.shields.io/badge/lastest_version-1.1-orange.svg)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
+fork from [OKDALM](https://github.com/luckybilly/OKDALM)
 ----
 
-
-# Remote [README.md](https://github.com/luckybilly/OKDALM/blob/master/README.md)
+# Remote README
 ### Android studio基于artifactory的maven私服一键deploy工具
 
 OKDALM = One Key to Deploy Android Library to Maven
