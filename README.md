@@ -14,6 +14,8 @@ fork from https://github.com/luckybilly/OKDALM
 - 修改 deploy mode 默认为 -a
   - python deploy.py [-a]
 
+
+# Remote README.md
 ### Android studio基于artifactory的maven私服一键deploy工具
 
 OKDALM = One Key to Deploy Android Library to Maven
