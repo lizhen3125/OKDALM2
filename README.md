@@ -1,8 +1,9 @@
-# OKDALM
-![](https://img.shields.io/badge/lastest_version-1.1-orange.svg)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+# OKDALM2
 
-fork from [OKDALM](https://github.com/luckybilly/OKDALM)
+![](https://img.shields.io/badge/lastest_version-1.1-orange.svg)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](License)
+[![ForkfromOKDALM](https://img.shields.io/badge/parent-OKDALM-green.svg)](https://github.com/luckybilly/OKDALM)
+
 ----
 
 # Remote README
