@@ -11,6 +11,8 @@ fork from https://github.com/luckybilly/OKDALM
   - 配置 -u 时改为强制升级，无论当前是 snapshot 还是 release
   - 配置 -r 时改为强制设置 release，并重写 version_properties.gradle 中的配置，优先于 -u
 - 去除原有的 publications 里 android 逻辑判断
+- 修改 deploy mode 默认为 -a
+  - python deploy.py [-a]
 
 ## Android studio基于artifactory的maven私服一键deploy工具
 
