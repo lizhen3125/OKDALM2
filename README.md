@@ -4,6 +4,24 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![ForkfromOKDALM](https://img.shields.io/badge/base-OKDALM-green.svg)](https://github.com/luckybilly/OKDALM)
 
+## Usage In SubModule
+
+- git submodule add https://github.com/lixi0912/OKDALM2 .deploy
+- let project build.gradle apply from: '.deploy/artifactory.gradle'
+- copy artifactory_version.properties to root_project dir
+- settings.gradle include '.deploy'
+
+
+- Terminal
+  - cd .deploy
+  - python deploy.py [-c] [-l] [-a] [-u] [-r] module_name
+      - [-l] to local maven
+      - [-u] force upgrade
+      - [-a] deploy all
+      - [-c] deploy module by module_name
+      - [-r] force release 
+
+
 ----
 
 # Remote README

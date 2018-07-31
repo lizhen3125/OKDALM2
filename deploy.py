@@ -16,6 +16,7 @@ log_result = None
 debugMode = None
 to_local = None
 upgrade = None
+in_cur_dir = False
 
 
 def dump_help():
@@ -38,14 +39,14 @@ def dump_help():
 # 获取gradle命令
 def get_command():
     plat = platform.system()
-    if 'Darwin' == plat:
-        return './gradlew '
-    elif 'Windows' == plat:
+    if 'Windows' == plat:
         return 'gradlew '
-    elif 'Linux' == plat:
-        return './gradlew '
+    # elif 'Darwin' == plat:
+    #     return './gradlew '
+    # elif 'Linux' == plat:
+    #     return './gradlew '
     else:
-        return './gradlew '
+        return './gradlew ' if in_cur_dir else '../gradlew '
 
 
 # 如果是 debugMode 就显示编译信息
@@ -155,9 +156,11 @@ def version_level_up(lib_module_name):
     if last_index > -1:
         version = '.'.join(arr)
         version_properties.put(lib_module_name, version)
-        print 'NOTE: modify %s: [%s: %s -> %s]' % (ARTIFACTORY_FILE_NAME, lib_module_name, dv, version)
+        print 'NOTE: modify %s: [%s: %s -> %s]' % (
+            ARTIFACTORY_FILE_NAME, lib_module_name, dv, version)
     else:
-        print 'Error: auto level up %s: [%s: %s] failed!' % (ARTIFACTORY_FILE_NAME, lib_module_name, dv)
+        print 'Error: auto level up %s: [%s: %s] failed!' % (
+            ARTIFACTORY_FILE_NAME, lib_module_name, dv)
 
 
 def rewrite_module_maven_type(lib_module_name):
@@ -261,40 +264,46 @@ if __name__ == '__main__':
 
         if platform.system() == 'Windows':  # windows环境执行commands.getstatusoutput(command)时报错
             log_result = True
-        project_abs_path = os.path.abspath(os.curdir)  # 默认为当前目录
 
-        gradle_properties = property.parse(os.path.join(project_abs_path, 'gradle.properties'))
-        version_properties = property.parse(os.path.join(project_abs_path, ARTIFACTORY_FILE_NAME))
+        if os.path.exists(os.getcwd() + '/gradle.properties'):
+            in_cur_dir = True
+            project_abs_path = os.path.abspath(os.path.curdir)  # 默认为当前目录
+        else:
+            in_cur_dir = False
+            project_abs_path = os.path.abspath('..')  # 默认为当前目录
 
-        group_id = gradle_properties.get('maven_groupId')
-        gradle_key_prefix = gradle_properties.get('version_prefix')
-        module_dependencies = dependency_reader.get_project_dependencies(project_abs_path)
+    gradle_properties = property.parse(os.path.join(project_abs_path, 'gradle.properties'))
+    version_properties = property.parse(os.path.join(project_abs_path, ARTIFACTORY_FILE_NAME))
 
-        start = time.time()
-        start_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start))
-        print '\n++++++++++++++++++++++++++++++++   deploy start working  (start at: %s)    ++++++++++++++++++++++++++++++++++++++++++' % start_time
+    group_id = gradle_properties.get('maven_groupId')
+    gradle_key_prefix = gradle_properties.get('version_prefix')
+    module_dependencies = dependency_reader.get_project_dependencies(project_abs_path)
 
-        try:
-            if deploy_all:  # deploy所有在artifactory_version.properties中配置的module
-                print 'deploy below modules:'
-                print module_dependencies.sorted_modules
-                success = []
-                failed = []
-                for module in module_dependencies.sorted_modules:  # 按照依赖关系的顺序进行发布
-                    if deploy_main(module, 0) == 0:
-                        success.append(module)
-                    else:
-                        failed.append(module)
-                print '\ndeploy finished!'
-                print 'success:' + str(len(success))
-                print success
-                print 'failed:' + str(len(failed))
-                print failed
-            else:
-                deploy_main(module_name, reverse)
-        except Exception, e:
-            print traceback.format_exc()
+    start = time.time()
+    start_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(start))
+    print '\n++++++++++++++++++++++++++++++++   deploy start working  (start at: %s)    ++++++++++++++++++++++++++++++++++++++++++' % start_time
 
-        end_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-        print '++++++++++++++++++++++++++++++++  deploy completed   (end at: %s, cost: %ds) ++++++++++++++++++++++++++++++++++++++++\n' % (
-            end_time, time.time() - start)
+    try:
+        if deploy_all:  # deploy所有在artifactory_version.properties中配置的module
+            print 'deploy below modules:'
+            print module_dependencies.sorted_modules
+            success = []
+            failed = []
+            for module in module_dependencies.sorted_modules:  # 按照依赖关系的顺序进行发布
+                if deploy_main(module, 0) == 0:
+                    success.append(module)
+                else:
+                    failed.append(module)
+            print '\ndeploy finished!'
+            print 'success:' + str(len(success))
+            print success
+            print 'failed:' + str(len(failed))
+            print failed
+        else:
+            deploy_main(module_name, reverse)
+    except Exception, e:
+        print traceback.format_exc()
+
+    end_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+    print '++++++++++++++++++++++++++++++++  deploy completed   (end at: %s, cost: %ds) ++++++++++++++++++++++++++++++++++++++++\n' % (
+        end_time, time.time() - start)
