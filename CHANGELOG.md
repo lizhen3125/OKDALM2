@@ -5,6 +5,7 @@
   - 可单独配置 module 的 MavenType、ArtifactId、GroupId
   - eg. LibAMavenType = release
 - 遍历 Module 依赖时，过滤 lint-gradle 依赖
+- 增加 -i >>> --info --stacktrace
 
 ### Bug Fixes
 - 修复更新 module 信息时出现正则误匹配
