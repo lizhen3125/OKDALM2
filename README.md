@@ -14,11 +14,11 @@ fork from https://github.com/luckybilly/OKDALM
 - 修改 deploy mode 默认为 -a
   - python deploy.py [-a]
 
-## Android studio基于artifactory的maven私服一键deploy工具
+### Android studio基于artifactory的maven私服一键deploy工具
 
 OKDALM = One Key to Deploy Android Library to Maven
 
-## 适用范围
+### 适用范围
 
 有公司内部的lib工程并希望（或已经）存放在公司maven私服，lib模块之间、app引用lib模块的方式使用maven方式进行依赖
 
@@ -31,16 +31,16 @@ OKDALM = One Key to Deploy Android Library to Maven
     |        lib_module_n      |          app_n      |         app_n    |
     +--------------------------+---------------------+------------------+
     
-## 作用
+### 作用
 - 规范代码管理：公共库专人维护
 - 便于使用Jenkins进行持续集成
 - 一条命令即可deploy发生修改的module及依赖该module的其它module，并立即生效
 - 可以按照工程中module依赖关系的顺序deploy all
 - 便于管理module是否进行deploy管理（通过是否在artifactory_version.properties中进行配置确定）
 
-## 使用方式
+### 使用方式
 
-### 涉及到的文件有
+#### 涉及到的文件有
 
 - python_tools 文件夹          （新建：脚本库）
 - artifactory.gradle          （新建：artifactory设置）
@@ -50,7 +50,7 @@ OKDALM = One Key to Deploy Android Library to Maven
 - gradle.properties             （修改：添加deploy相关设置项）
 - 各module目录下的build.gradle文件 （修改：将module间的依赖改为maven方式）
 
-### 初次使用
+#### 初次使用
 假定当前lib工程名称为：CommonLib
 
 - 使用artifactory搭建maven私服
