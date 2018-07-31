@@ -27,6 +27,10 @@ allprojects {
 
 }
 
+def getAarFilePath(dir, projectName) {
+    return "${dir}/outputs/aar/" + projectName + "-release.aar"
+}
+
 def SNAPSHOT_MAVEN_TYPE = 'snapshot'
 //configure(allprojects.findAll { it.name.startsWith('lib_') || it.name.equals('pullToRefresh_Lib') }) {//所有名称以lib_开头的module
 subprojects {
@@ -35,19 +39,24 @@ subprojects {
     apply plugin: 'maven-publish'
 
     //读取module的version
-    def Properties props = new Properties()
-    File propFile = file(file("temp").parentFile.parentFile.absolutePath + "/artifactory_version.properties");
+    Properties props = new Properties()
+    File propFile = file(rootDir.path + "/artifactory_version.properties");
     if (propFile.exists()) {
         props.load(new FileInputStream(propFile))
     }
-    def maven_type = props.getProperty("maven_type")
+
+    def maven_type = props.getProperty(project.name + 'MavenType', props.getProperty("maven_type"))
     def versionType = maven_type == SNAPSHOT_MAVEN_TYPE ? '-SNAPSHOT' : ''
+    def artifactName = props.getProperty(project.name + 'ArtifactId', project.name)
+    def artifactGroupId = props.getProperty(project.name + 'GroupId', maven_groupId)
 
     publishing {
         publications {
             aar(MavenPublication) {
-                groupId maven_groupId
-                artifactId project.getName()
+
+
+                groupId artifactGroupId
+                artifactId artifactName
 
                 def libVersion = props.getProperty(project.name)
                 if (libVersion == null)
@@ -56,8 +65,17 @@ subprojects {
 
                 version = libVersion
 
+                println "----------------------------------------"
+                println "|        " + libVersion + "        |"
+                println "----------------------------------------"
+
                 // Tell maven to prepare the generated "*.aar" file for publishing
-                artifact("${buildDir}/outputs/aar/${project.getName()}-release.aar")
+                File file = new File(getAarFilePath(buildDir, project.getName()))
+                if (file.exists()) {
+                    artifact(file.getPath())
+                } else {
+                    artifact(getAarFilePath(buildDir, artifactName))
+                }
 
                 //The publication doesn't know about our dependencies, so we have to manually add them to the pom
                 pom.withXml {
@@ -78,7 +96,7 @@ subprojects {
                                 println "skip dependency:" + it.name
                                 return
                             }
-
+                            
                             if ("lint-gradle" == it.name) {
                                 println "skip dependency:" + it.name
                                 return
@@ -92,7 +110,7 @@ subprojects {
                             println "<dependency>"
                             println "  <groupId>" + it.group + "</groupId>"
                             println "  <artifactId>" + it.name + "</artifactId>"
-                            println "  <version>" + it.version + "</version>"
+                            println "  <version>" + it.group + "</version>"
                             println "</dependency>"
 
                             def dependencyNode = dependenciesNode.appendNode('dependency')
